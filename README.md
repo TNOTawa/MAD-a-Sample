@@ -1,55 +1,137 @@
 <p align="center"><img src="Assets/Features/Plugin%20UI%20v1.2.png" width="80%" alt="View of full plugin" /></p>
 
-# Just a Sample
+# MAD-a-Sample
 
-[Your favorite sampler shouldn't be complicated.](https://bobona.github.io/just-a-sample/)
+[![WIP](https://img.shields.io/badge/status-WIP-orange)](https://github.com/BOBONA/Just-a-Sample)
 
-[Promo video](https://www.youtube.com/watch?v=P7dgOe_frXw)
+[English](README.md) | [中文](README.zh-CN.md)
 
-[See releases](https://github.com/BOBONA/Just-a-Sample/releases)
+> **Make any sample playable. Make it MAD.**
+
+[See upstream releases](https://github.com/BOBONA/Just-a-Sample/releases)
 
 Available for Windows, Mac, and Linux in VST3/AU.
 
 ## Overview
-Just a Sample is a powerful, _modern_ audio sampler, with a focus on simplicity and ease of use. 
-Best of all, it's **free** and **open-source**! I spent a lot of time on this project, and I think it will
-be a great addition to your plugin collection. 
 
-Feel free to take a look at the source code and reach out with any questions or suggestions. I took care
-to make the code as clean and readable as possible, with a focus on good design practices. That being said, 
-I am still new to audio programming.
+**MAD-a-Sample** is a modulation-first open-source sampler synthesizer designed for 音MAD, YTPMV, vocal chopping, and sample-based sound design.
+
+This plugin is a fork of [Just-a-Sample](https://github.com/BOBONA/Just-a-Sample). Unlike Just-a-Sample, which targets general users, MAD-a-Sample serves a specific creative community.
+
+The pain point it addresses is not that traditional samplers lack features, but that most lack the ability to turn a sample into a genuine instrument — yet synthesizers already have excellent benchmarks, so I built one. The interaction philosophy is inspired by the modulation-first workflow of modern synthesizers such as Vital.
+
+> Most of the content below is AI-generated and its accuracy is not guaranteed.
+
+### What MAD-a-Sample Is
+
+> **Load any sound, and within a minute turn it into a playable, modulatable, saveable synth patch.**
+
+- A **sample synthesizer** — the waveform is your oscillator, the sampler is your synth engine.
+- A tool that makes modulation **visible, direct, and drag-and-drop**.
+- An instrument where every voice has its own independent LFO phase, envelope state, filter, and randomization.
+
+### What MAD-a-Sample Is Not
+
+- **Not a Kontakt competitor** — no multi-sample mapping, round robin, disk streaming, or library management.
+- **Not an effect suite** — complex reverb, delay, compression, and mastering are left to your existing plugin chain.
+- **Not a sample editor** — it does not crop, normalize, or batch-process audio files.
+
+## Design Philosophy: Architecture Boundaries
+
+MAD-a-Sample follows a clear principle:
+
+> **If a feature can be done equally well by an external plugin, leave it out. If it depends on the voice lifecycle, it must be built in.**
+
+The line is drawn at the **voice boundary**. Everything that needs to understand individual voice state — its playback position, its envelope phase, its LFO angle, its note velocity — belongs inside the sampler. Everything that only processes the final mixed audio can stay outside.
+
+### Stays Inside (Voice-Dependent)
+
+| Category | Examples |
+|---|---|
+| **Amplitude shaping** | Amp ADSR, modulation envelopes |
+| **Per-voice modulation** | LFO per voice, velocity, key tracking, note random |
+| **Per-voice filtering** | State-variable filter with per-note envelope |
+| **Sample playback** | Start/loop/release regions, reverse, ping-pong, one-shot, gate |
+| **Time & pitch** | Per-voice pitch shifting with formant preservation (planned), playback speed modulation |
+| **Voice management** | Mono, legato, glide, voice stealing, unison (planned) |
+| **Modulation routing** | Drag-and-drop modulation, 16-slot matrix, macros |
+
+### Stays Outside (Global Processing)
+
+Reverb, delay, compression, multi-band EQ, advanced distortion, chorus, flanger, phaser, spectral processing, and mastering — all better served by your DAW's native plugins or dedicated third-party effects.
+
+**This is not a compromise. It is a design decision.** By narrowing scope, MAD-a-Sample can go deeper on the things only a sampler can do.
 
 ## Features
 
-[Detailed feature list](FEATURES.md)
+### Current (inherited from Just-a-Sample v1.3)
 
-#### Core features
-- Smoothly zoom in to the level of individual samples to 
-set bounds as accurately as you need. Waveform drawing is **optimized** for large samples.
-- Integrated [Bungee time stretcher](https://github.com/kupix/bungee) allows for
-freely modulating time and pitch independently. Try extreme slow-downs (0.01x) for unique sounds.
-- Modern navigation controls allow for easy browsing of waveforms with touchpad or mouse.
-- A routable FX chain includes reverb, chorus, distortion, and EQ for easy sound design.
-- Waveform Mode activates when small bounds are set, looping the waveform periodically like a wavetable synth. This turns Just a Sample into a unique tone generator.
-- Easily modify attack and release curves.
-- Includes equal power cross-fade looping with separate attack and release sample portions.
-- Supports pitch bend and fine-tuning.
+- Smooth waveform visualization with sample-level zoom
+- Integrated [Bungee time stretcher](https://github.com/kupix/bungee) — independent time and pitch modulation (0.01x–5x)
+- Basic resampling with Lanczos interpolation and anti-aliasing
+- Loop crossfading with separate attack, loop, and release sample regions
+- Waveform Mode — loop tiny bounds like a wavetable synth
+- Attack and release envelope with adjustable curves
+- Routable FX chain (reverb, chorus, distortion, EQ)
+- Direct recording into the plugin
+- Sample embedding in plugin state
+- Pitch detection and auto-tune (experimental)
+- MTS-ESP microtuning support
+- REAPER-specific integration (undo/redo, ReaScript file loading)
 
-#### Extras
-- Disable antialiasing for a gritty LoFi effect.
-- Record samples directly into the sampler.
-- Store samples directly in plugin state to remove dependencies (can be disabled).
-- Auto-tune to A440 (experimental, works best on simple sounds).
+### Planned (MAD-a-Sample Roadmap)
+
+**Phase 1 — Stability & Foundation**
+- Test coverage for offline rendering, block sizes, sample rate switching
+- Fix known crashes on Linux and macOS export
+- Separate playback state machine from amp envelope (enable true ADSR)
+
+**Phase 2 — Modulation Engine**
+- Per-voice modulation architecture (ENV / LFO / Velocity / Keytrack / Random)
+- 16-slot modulation matrix
+- 2 LFOs per voice
+- 1 modulation ADSR per voice
+- 4 assignable macros
+
+**Phase 3 — Per-Voice Filter & Sound Shaping**
+- State-variable filter per voice (LP/BP/HP)
+- Filter envelope and key tracking
+- Per-voice pan, gain, and pitch modulation targets
+
+**Phase 4 — Vital-Style Modulation UI**
+- Drag LFO icon onto any knob to assign modulation
+- Visual modulation rings on every modulated parameter
+- Click-and-drag to adjust modulation amount directly on the knob
+- Real-time waveform and filter response preview
+
+**Phase 5 — Extended Playback & Advanced**
+- Reverse, ping-pong, random start, release loop
+- Unison with voice spread
+- Formant-preserved pitch shifting
+- MSEG (multi-segment envelope generator)
+
+## Quick Comparison
+
+| | RS5K (ReaSamplOmatic5000) | MAD-a-Sample | Kontakt |
+|---|---|---|---|
+| **Philosophy** | Simple, modular building block | Sample as synthesizer | Multi-sample workstation |
+| **Modulation** | Host-level parameter modulation only | Per-voice LFO, ENV, velocity, keytrack, drag-and-drop | Deep but complex, script-based |
+| **Voice independence** | None (plugin-global modulation) | Every voice carries its own state | Yes |
+| **Sample mapping** | One sample per instance | One sample, deep sound design | Multi-sample, velocity layers, round robin |
+| **Learning curve** | Minimal | Shallow start, progressive depth | Steep |
+| **Target user** | General DAW users | 音MAD / YTPMV / sound designers | Professional composers, sound libraries |
 
 ## Installation
-### Pre-built 
 
-You can download installers from,
+### Pre-built
+
+Pre-built binaries are available from the original Just-a-Sample project:
 - [itch.io](https://binyaminf.itch.io/just-a-sample)
 - [GitHub Releases](https://github.com/BOBONA/Just-a-Sample/releases)
 
-### Build from source
-Just a Sample is easy to build from source.
+MAD-a-Sample builds will be published separately as the fork diverges.
+
+### Build from Source
 
 ```bash
 # Clone the repository
@@ -97,23 +179,26 @@ You can set the following CMake options by passing `-D<option>=<value>` to the C
   ```bash
   ./Releases/Linux/install-dependencies.sh
   ```
-  
-### Dependencies
-Just a Sample relies on:
-- [JUCE](https://juce.com/) for plugin framework and UI
-- [Bungee](https://bungee.parabolaresearch.com/) for time-stretching and pitch-shifting
-- [Melatonin Blur](https://melatonin.dev/manuals/melatonin-blur/) for fast shadow-compositing
-- [LEAF](https://github.com/spiricom/LEAF) for a fast pitch-detection algorithm
-- [readerwriterqueue](https://github.com/cameron314/readerwriterqueue) for lock-free thread communication
-- [Gin](https://github.com/FigBug/Gin) for AirWindows distortion and SimpleVerb reverb algorithms
-- [MTS-ESP](https://github.com/ODDSound/MTS-ESP/tree/main/Client) for microtuning support
-- [reaper-sdk](https://github.com/justinfrankel/reaper-sdk/tree/main/sdk) for Reaper-specific VST3 extensions
 
-JUCE, Bungee, Melatonin Blur, and LEAF are included through [CMake](CMakeLists.txt#L29), readerwriterqueue is included as a 
-git [submodule](.gitmodules), and the others are included as source files [in the project](External).
+## Dependencies & Licenses
+
+MAD-a-Sample inherits and will extend the dependency stack of Just-a-Sample. License awareness is critical for a long-term open-source project.
+
+| Dependency | Purpose | License |
+|---|---|---|
+| [JUCE 8](https://juce.com/) | Plugin framework & UI | AGPLv3 / Commercial |
+| [Bungee](https://bungee.parabolaresearch.com/) | Time-stretching & pitch-shifting | MPL-2.0 |
+| [Melatonin Blur](https://melatonin.dev/manuals/melatonin-blur/) | Fast shadow compositing | MIT |
+| [LEAF](https://github.com/spiricom/LEAF) | Pitch detection | MIT |
+| [readerwriterqueue](https://github.com/cameron314/readerwriterqueue) | Lock-free queue | Simplified BSD |
+| [Gin](https://github.com/FigBug/Gin) | Distortion & reverb algorithms | MIT |
+| [MTS-ESP](https://github.com/ODDSound/MTS-ESP/tree/main/Client) | Microtuning | Permissive (vendor) |
+| [reaper-sdk](https://github.com/justinfrankel/reaper-sdk) | REAPER VST3 extensions | Permissive |
+
+**MAD-a-Sample itself remains MIT**, following the original Just-a-Sample license. Dependencies carry their own licenses — notably JUCE 8 under AGPLv3, which may affect closed-source distribution. Commercial JUCE licensing is available for proprietary use.
 
 ## Credits
-This is my first audio plugin, and I am very happy at how it turned out! This was a long-running project
-that took place over the course of over a year (with long breaks), and I learned a lot on the way.
 
-Special thanks to JUCE and The Audio Programmer Discord for all the help. 
+MAD-a-Sample is a fork of **Just-a-Sample** by [Binyamin Friedman](https://github.com/BOBONA), who built an excellent foundation with clean architecture, modern JUCE practices, and thoughtful design. This project exists because an already-great sampler had the right DNA to become something more specialized.
+
+Special thanks to JUCE and The Audio Programmer community for resources and guidance.
