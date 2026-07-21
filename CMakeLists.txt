@@ -61,6 +61,7 @@ FetchContent_Declare(
         JUCE
         GIT_REPOSITORY  https://github.com/juce-framework/JUCE.git
         GIT_TAG         ${JUCE_VERSION}
+        GIT_SHALLOW     TRUE
         SOURCE_DIR      ${FETCHCONTENT_BASE_DIR}/JUCE
 )
 
@@ -68,6 +69,7 @@ FetchContent_Declare(
         bungee
         GIT_REPOSITORY  https://github.com/bungee-audio-stretch/bungee.git
         GIT_TAG         ${BUNGEE_INSTALL_VERSION}
+        GIT_SHALLOW     TRUE
         SOURCE_DIR      ${FETCHCONTENT_BASE_DIR}/bungee
         # We patch in our own maxPitchOctaves constant and lower the overly restrictive CMake version requirement
         PATCH_COMMAND ${CMAKE_COMMAND} -DREPO_DIR=<SOURCE_DIR> -DPATCH_FILE=${BUNGEE_PATCH_FILE}
@@ -78,6 +80,7 @@ FetchContent_Declare(
         melatonin_blur
         GIT_REPOSITORY  https://github.com/sudara/melatonin_blur.git
         GIT_TAG         ${MELATONIN_BLUR_VERSION}
+        GIT_SHALLOW     TRUE
         SOURCE_DIR      ${FETCHCONTENT_BASE_DIR}/melatonin_blur
 )
 
@@ -85,6 +88,7 @@ FetchContent_Declare(
         melatonin_inspector
         GIT_REPOSITORY  https://github.com/sudara/melatonin_inspector.git
         GIT_TAG         ${MELATONIN_INSPECTOR_VERSION}
+        GIT_SHALLOW     TRUE
         SOURCE_DIR      ${FETCHCONTENT_BASE_DIR}/melatonin_inspector
 )
 

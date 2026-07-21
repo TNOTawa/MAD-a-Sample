@@ -1,0 +1,29 @@
+{
+  "version": 3,
+
+  "configurePresets": [
+    {
+      "name": "windows-msvc",
+      "displayName": "Windows (MSVC cl.exe, Ninja Multi-Config)",
+      "description": "Local preset: build VST3 with the MSVC command-line toolchain (cl.exe) via Ninja. Run from a vcvars64 environment (no VS IDE required).",
+      "generator": "Ninja Multi-Config",
+      "binaryDir": "${sourceDir}/out/build/windows-msvc",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "cl",
+        "CMAKE_CXX_COMPILER": "cl",
+        "USE_CCACHE": "OFF",
+        "JAS_VST3_REAPER_INTEGRATION": "true"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    }
+  ],
+
+  "buildPresets": [
+    { "name": "debug-windows-msvc",   "configurePreset": "windows-msvc", "configuration": "Debug",   "targets": [ "JustASample_VST3" ] },
+    { "name": "release-windows-msvc", "configurePreset": "windows-msvc", "configuration": "Release", "targets": [ "JustASample_VST3" ] }
+  ]
+}
